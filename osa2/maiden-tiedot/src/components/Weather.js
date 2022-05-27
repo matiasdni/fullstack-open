@@ -5,6 +5,7 @@ export const Weather = ({ weather }) => {
         temperature {(weather.main.temp - 273.15).toPrecision(3)} Celsius <br />
         <img
           src={`http://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}
+          alt="Weather icon"
         />
         <br />
         wind {weather.wind.speed} m/s

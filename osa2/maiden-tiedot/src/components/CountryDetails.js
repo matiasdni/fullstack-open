@@ -1,22 +1,18 @@
-import { useEffect, useState } from "@types/react";
-import axios from "axios";
+import { useEffect, useState } from "react";
 import { Weather } from "./Weather";
+import axios from "axios";
 
-export const CountryDetails = ({ country }) => {
+export const CountryDetails = ({ country, lat, long }) => {
   const [weather, setWeather] = useState({});
-  const api_key = process.env.REACT_APP_API_KEY;
 
   useEffect(() => {
-    console.log("effect details");
+    const api_key = process.env.REACT_APP_API_KEY;
     axios
       .get(
-        `https://api.openweathermap.org/data/2.5/weather?lat=${country.capitalInfo.latlng[0]}&lon=${country.capitalInfo.latlng[1]}&appid=${api_key}`
+        `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&appid=${api_key}`
       )
-      .then((response) => {
-        console.log(response.data);
-        setWeather(response.data);
-      });
-  }, []);
+      .then((response) => setWeather(response.data));
+  }, [lat, long]);
 
   return (
     <div>
@@ -29,7 +25,7 @@ export const CountryDetails = ({ country }) => {
           <li key={language}>{language}</li>
         ))}
       </ul>
-      <img src={country.flags["png"]} />
+      <img src={country.flags["png"]} alt="Country flag" />
       <h2> Weather in {country.capital}</h2>
       <Weather weather={weather} />
     </div>
