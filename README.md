@@ -11,7 +11,10 @@
     - [kurssitiedot](osa2/kurssitiedot)
     - [maiden-tiedot](osa2/maiden-tiedot)
     - [puhelinluettelo](osa2/puhelinluettelo)
-- [ ] osa3
+- [x] osa3
+    - [puhelinluettelon frontend](osa3/puhelinluettelo)
+    - [puhelinluettelon backend](osa3/Puhelinluettelon-backend)
+    - [linkki herokuun](https://immense-beyond-90703.herokuapp.com/)
 - [ ] osa4
 - [ ] osa5
 - [ ] osa6
