@@ -15,7 +15,8 @@
     - [puhelinluettelon frontend](osa3/puhelinluettelo)
     - [puhelinluettelon backend](osa3/Puhelinluettelon-backend)
     - [linkki herokuun](https://immense-beyond-90703.herokuapp.com/)
-- [ ] osa4
+- [x] osa4
+    - [blogilista](osa4/blogilista)
 - [ ] osa5
 - [ ] osa6
 - [ ] osa7
