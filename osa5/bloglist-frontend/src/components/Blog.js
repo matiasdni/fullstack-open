@@ -1,40 +1,41 @@
-import { useState } from "react";
+import { useState } from 'react'
+import PropTypes from 'prop-types'
 
 const Blog = ({ blog, handleLikes, user, deleteBlog }) => {
-  const [detailsVisibility, setDetailsVisibility] = useState(false);
+  const [detailsVisibility, setDetailsVisibility] = useState(false)
 
   const hideWhenVisible = {
-    display: detailsVisibility ? "none" : "",
-  };
+    display: detailsVisibility ? 'none' : '',
+  }
   const showWhenVisible = {
-    display: detailsVisibility ? "" : "none",
-  };
+    display: detailsVisibility ? '' : 'none',
+  }
 
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
-    border: "solid",
+    border: 'solid',
     borderWidth: 1,
     marginBottom: 5,
-  };
+  }
 
   const toggleVisibility = () => {
-    setDetailsVisibility(!detailsVisibility);
-  };
+    setDetailsVisibility(!detailsVisibility)
+  }
 
   const updateLikes = () => {
     const updatedBlog = {
       ...blog,
       likes: blog.likes + 1,
       user: blog.user.id,
-    };
-    handleLikes(updatedBlog);
-  };
+    }
+    handleLikes(updatedBlog)
+  }
 
   const removeBlog = () => {
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`))
-      deleteBlog(blog);
-  };
+      deleteBlog(blog)
+  }
 
   if (user.username !== blog.user.username)
     return (
@@ -62,7 +63,7 @@ const Blog = ({ blog, handleLikes, user, deleteBlog }) => {
           </div>
         </div>
       </div>
-    );
+    )
 
   return (
     <div>
@@ -92,7 +93,14 @@ const Blog = ({ blog, handleLikes, user, deleteBlog }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Blog;
+Blog.propTypes = {
+  handleLikes: PropTypes.func.isRequired,
+  deleteBlog: PropTypes.func.isRequired,
+  blog: PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
+}
+
+export default Blog

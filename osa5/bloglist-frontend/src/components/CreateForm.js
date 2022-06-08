@@ -1,17 +1,17 @@
-import { useState } from "react";
+import { useState } from 'react'
 
 export const CreateForm = ({ handleSubmit }) => {
-  const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
-  const [url, setUrl] = useState("");
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
 
   const addBlog = (event) => {
-    event.preventDefault();
-    handleSubmit({ title: title, author: author, url: url });
-    setTitle("");
-    setAuthor("");
-    setUrl("");
-  };
+    event.preventDefault()
+    handleSubmit({ title: title, author: author, url: url })
+    setTitle('')
+    setAuthor('')
+    setUrl('')
+  }
 
   return (
     <div>
@@ -20,32 +20,32 @@ export const CreateForm = ({ handleSubmit }) => {
         <div>
           title
           <input
-            type={"text"}
+            type={'text'}
             value={title}
-            name={"title"}
+            name={'title'}
             onChange={({ target }) => setTitle(target.value)}
           />
         </div>
         <div>
           author
           <input
-            type={"text"}
+            type={'text'}
             value={author}
-            name={"author"}
+            name={'author'}
             onChange={({ target }) => setAuthor(target.value)}
           />
         </div>
         <div>
           url
           <input
-            type={"text"}
+            type={'text'}
             value={url}
-            name={"url"}
+            name={'url'}
             onChange={({ target }) => setUrl(target.value)}
           />
         </div>
-        <button type={"submit"}>create</button>
+        <button type={'submit'}>create</button>
       </form>
     </div>
-  );
-};
+  )
+}
