@@ -5,9 +5,9 @@ export const CreateForm = ({ handleSubmit }) => {
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
 
-  const createBlog = (event) => {
+  const addBlog = (event) => {
     event.preventDefault();
-    handleSubmit({ title, author, url });
+    handleSubmit({ title: title, author: author, url: url });
     setTitle("");
     setAuthor("");
     setUrl("");
@@ -16,7 +16,7 @@ export const CreateForm = ({ handleSubmit }) => {
   return (
     <div>
       <h2>create new</h2>
-      <form onSubmit={createBlog}>
+      <form onSubmit={addBlog}>
         <div>
           title
           <input

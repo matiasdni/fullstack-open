@@ -1,15 +1,34 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Blog from "./components/Blog";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 import { LoginForm } from "./components/LoginForm";
 import { CreateForm } from "./components/CreateForm";
+import Togglable from "./components/Togglable";
+
+const Notification = ({ notification }) => {
+  if (notification === null) {
+    return null;
+  }
+
+  const style = {
+    color: notification.type === "alert" ? "red" : "green",
+    background: "lightgrey",
+    fontSize: 20,
+    borderStyle: "solid",
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
+  };
+
+  return <div style={style}>{notification.message}</div>;
+};
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
   const [notification, setNotification] = useState(null);
-  const [createVisible, setCreateVisible] = useState(false);
+  const createFormRef = useRef();
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -24,7 +43,7 @@ const App = () => {
     }
   }, []);
 
-  const handleLikes = async ({ updatedBlog }) => {
+  const handleLikes = async (updatedBlog) => {
     await blogService.update(updatedBlog);
     const newBlogs = [...blogs];
     newBlogs.at(
@@ -65,51 +84,21 @@ const App = () => {
     notify("logout successful");
   };
 
-  const addBlog = async ({ title, author, url }) => {
+  const createBlog = async (newBlog) => {
     try {
-      const blog = await blogService.create({ title, author, url });
+      const blog = await blogService.create(newBlog);
       setBlogs(blogs.concat(blog));
       notify(`a new blog ${blog.title} by ${blog.author} added`);
-      setCreateVisible(false);
+      createFormRef.current.toggleVisibility();
     } catch (e) {
       notify("title or url missing", "alert");
     }
   };
 
-  const createForm = () => {
-    const hideWhenVisible = { display: createVisible ? "none" : "" };
-    const showWhenVisible = { display: createVisible ? "" : "none" };
-    return (
-      <div>
-        <div style={hideWhenVisible}>
-          <button onClick={() => setCreateVisible(true)}>
-            create new blog
-          </button>
-        </div>
-        <div style={showWhenVisible}>
-          <CreateForm handleSubmit={addBlog} />
-          <button onClick={() => setCreateVisible(false)}>cancel</button>
-        </div>
-      </div>
-    );
-  };
-
-  const Notification = ({ notification }) => {
-    if (notification === null) {
-      return null;
-    }
-
-    const style = {
-      color: notification.type === "alert" ? "red" : "green",
-      background: "lightgrey",
-      fontSize: 20,
-      borderStyle: "solid",
-      borderRadius: 5,
-      padding: 10,
-      marginBottom: 10,
-    };
-
-    return <div style={style}>{notification.message}</div>;
+  const removeBlog = async (blog) => {
+    await blogService.remove(blog);
+    setBlogs(blogs.filter((b) => b.id !== blog.id));
+    notify(`${blog.title} by ${blog.author} removed`);
   };
 
   if (user === null)
@@ -127,11 +116,21 @@ const App = () => {
       <p>
         {user.name} logged in <button onClick={logOutHandler}>logout</button>
       </p>
-      {createForm()}
+      <Togglable buttonLabel="create new blog" ref={createFormRef}>
+        <CreateForm handleSubmit={createBlog} />
+      </Togglable>
       <div>
-        {blogs.map((blog) => (
-          <Blog key={blog.id} blog={blog} handleLikes={handleLikes} />
-        ))}
+        {blogs
+          .sort((a, b) => b.likes - a.likes)
+          .map((blog) => (
+            <Blog
+              key={blog.id}
+              blog={blog}
+              handleLikes={handleLikes}
+              user={user}
+              deleteBlog={removeBlog}
+            />
+          ))}
       </div>
     </>
   );
