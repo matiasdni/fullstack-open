@@ -18,6 +18,7 @@
 - [x] osa4
     - [blogilista](osa4/blogilista)
 - [ ] osa5
+    - [blogilista-frontend](osa5/bloglist-frontend)
 - [ ] osa6
 - [ ] osa7
 - [ ] osa8
