@@ -17,8 +17,9 @@
     - [linkki herokuun](https://immense-beyond-90703.herokuapp.com/)
 - [x] osa4
     - [blogilista](osa4/blogilista)
-- [ ] osa5
+- [x] osa5
     - [blogilista-frontend](osa5/bloglist-frontend)
+    - [blogilista-backend](osa5/bloglist-backend)
 - [ ] osa6
 - [ ] osa7
 - [ ] osa8
