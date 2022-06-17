@@ -21,7 +21,11 @@ const Notification = ({ notification }) => {
     marginBottom: 10,
   }
 
-  return <div style={style}>{notification.message}</div>
+  return (
+    <div style={style} id="notification">
+      {notification.message}{' '}
+    </div>
+  )
 }
 
 const App = () => {
@@ -87,6 +91,7 @@ const App = () => {
   const createBlog = async (newBlog) => {
     try {
       const blog = await blogService.create(newBlog)
+      blog.user = user
       setBlogs(blogs.concat(blog))
       notify(`a new blog ${blog.title} by ${blog.author} added`)
       createFormRef.current.toggleVisibility()
