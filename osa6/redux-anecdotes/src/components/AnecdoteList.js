@@ -1,14 +1,25 @@
 import { useDispatch, useSelector } from "react-redux";
 import { incrementVotesOf } from "../reducers/anecdoteReducer";
+import { notify, reset } from "../reducers/notificationReducer";
 
 const AnecdoteList = () => {
-  const anecdotes = useSelector((state) =>
-    state.sort((a, b) => b.votes - a.votes)
-  );
   const dispatch = useDispatch();
+  const anecdotes = useSelector((state) =>
+    [...state.anecdotes]
+      .sort((a, b) => b.votes - a.votes)
+      .filter((anec) =>
+        anec.content.toLowerCase().includes(state.filter.toLowerCase())
+      )
+  );
 
   const vote = (id) => {
     dispatch(incrementVotesOf(id));
+    dispatch(
+      notify(`you voted "${anecdotes.find((a) => a.id === id).content}"`)
+    );
+    setTimeout(() => {
+      dispatch(reset(null));
+    }, 5000);
   };
 
   return (
