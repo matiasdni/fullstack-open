@@ -7,7 +7,7 @@ const notificationSlice = createSlice({
     notify(state, action) {
       return action.payload;
     },
-    reset() {
+    reset(state, action) {
       return null;
     },
   },
