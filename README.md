@@ -20,7 +20,7 @@
 - [x] osa5
     - [blogilista-frontend](osa5/bloglist-frontend)
     - [blogilista-backend](osa5/bloglist-backend)
-- [ ] osa6
+- [x] osa6
     - [unicafe-redux](osa6/unicafe-redux)
     - [redux-anecdotes](osa6/redux-anecdotes)
 - [ ] osa7
