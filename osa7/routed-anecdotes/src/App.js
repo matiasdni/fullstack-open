@@ -1,6 +1,6 @@
 import { Routes, Route, Link, useMatch, useNavigate } from "react-router-dom";
-
 import { useState } from "react";
+import { useField } from "./hooks";
 
 const Menu = () => {
   const padding = {
@@ -82,51 +82,48 @@ const Footer = () => (
 );
 
 const CreateNew = (props) => {
-  const [content, setContent] = useState("");
-  const [author, setAuthor] = useState("");
-  const [info, setInfo] = useState("");
-  const navigate = useNavigate()
+  const { reset: contentReset, ...contentProps } = useField("text");
+  const { reset: authorReset, ...authorProps } = useField("text");
+  const { reset: infoReset, ...infoProps } = useField("text");
+
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     props.addNew({
-      content,
-      author,
-      info,
+      content: contentProps.value,
+      author: authorProps.value,
+      info: infoProps.value,
       votes: 0,
     });
-    navigate('/')
+    navigate("/");
+  };
+
+  const handleReset = (e) => {
+    e.preventDefault();
+    contentReset();
+    authorReset();
+    infoReset();
   };
 
   return (
     <div>
       <h2>create a new anecdote</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} onReset={handleReset}>
         <div>
           content
-          <input
-            name="content"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-          />
+          <input {...contentProps} />
         </div>
         <div>
           author
-          <input
-            name="author"
-            value={author}
-            onChange={(e) => setAuthor(e.target.value)}
-          />
+          <input {...authorProps} />
         </div>
         <div>
           url for more info
-          <input
-            name="info"
-            value={info}
-            onChange={(e) => setInfo(e.target.value)}
-          />
+          <input {...infoProps} />
         </div>
-          <button>create</button>
+        <button>create</button>
+        <button type="reset">reset</button>
       </form>
     </div>
   );
