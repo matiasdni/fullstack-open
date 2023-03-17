@@ -1,40 +1,18 @@
-import { useEffect, useState, useRef, useContext, useReducer } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import { LoginForm } from './components/LoginForm'
 import { CreateForm } from './components/CreateForm'
 import Togglable from './components/Togglable'
-import { NotificationProvider, NotificationContext } from './NotificationContext';
-
-const Notification = ({ notification }) => {
-  const { state } = useContext(NotificationContext);
-  if (state.message === null) {
-    return null
-  }
-
-  const style = {
-    color: notification.type === 'alert' ? 'red' : 'green',
-    background: 'lightgrey',
-    fontSize: 20,
-    borderStyle: 'solid',
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 10,
-  }
-
-  return (
-    <div style={style} id="notification">
-      {NotificationProvider(state.message)}
-    </div>
-  )
-}
+import { NotificationContext } from './NotificationContext'
+import { Notification } from './components/Notification'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
   const createFormRef = useRef()
-  const { state, dispatch } = useContext(NotificationContext);
+  const { dispatch } = useContext(NotificationContext)
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs))
@@ -59,13 +37,8 @@ const App = () => {
   }
 
   const notify = (message, type) => {
-    if (!type) {
-      type = 'info'
-    }
-    dispatch({ type: 'SET_NOTIFICATION', message, notificationType: type });
-    setTimeout(() => {
-      dispatch({ type: 'CLEAR_NOTIFICATION' });
-    }, 3000)
+    if (!type) type = 'info'
+    dispatch({ type: 'SET_NOTIFICATION', message, style: type })
   }
 
   const handleLogin = async ({ username, password }) => {
@@ -108,18 +81,15 @@ const App = () => {
     notify(`${blog.title} by ${blog.author} removed`)
   }
 
-  if (user === null)
-    return (
-      <>
-        <Notification />
-        <LoginForm handleSubmit={handleLogin} />
-      </>
-    )
-
-  return (
+  return user === null ? (
+    <>
+      <Notification />
+      <LoginForm handleSubmit={handleLogin} />
+    </>
+  ) : (
     <>
       <h2>blogs</h2>
-        <Notification />
+      <Notification />
       <p>
         {user.name} logged in <button onClick={logOutHandler}>logout</button>
       </p>
