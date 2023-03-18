@@ -27,7 +27,11 @@ Exercise solutions for Full Stack Open course from the University of Helsinki.
 - [x] Part 6
     - [Redux-Unicafe](osa6/unicafe-redux)
     - [Redux-Anecdotes](osa6/redux-anecdotes)
-- [ ] Part 7
+- [x] Part 7
+    - [routed-anecdotes](osa7/routed-anecdotes)
+    - [country-hook](osa7/country-hook)
+    - [ultimate-hook](osa7/ultimate-hooks)
+    - [blogilista](osa7/bloglist)
 - [ ] Part 8
 - [ ] Part 9
 - [ ] Part 10
