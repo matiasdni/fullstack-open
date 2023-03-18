@@ -1,59 +1,61 @@
-import { useState } from "react";
+import { useState } from 'react'
+import { Button, Form } from 'react-bootstrap'
 
 export const CreateForm = ({ handleSubmit }) => {
-  const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
-  const [url, setUrl] = useState("");
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
 
   const addBlog = (event) => {
-    event.preventDefault();
-    handleSubmit({ title: title, author: author, url: url });
-    setTitle("");
-    setAuthor("");
-    setUrl("");
-  };
+    event.preventDefault()
+    handleSubmit({ title: title, author: author, url: url })
+    setTitle('')
+    setAuthor('')
+    setUrl('')
+  }
 
   return (
-    <div className={"createDiv"}>
+    <div>
       <h2>create new</h2>
-      <form onSubmit={addBlog}>
-        <div>
-          title
-          <input
-            type={"text"}
+      <Form onSubmit={addBlog}>
+        <Form.Group className={'mb-3'}>
+          <Form.Label>Title:</Form.Label>
+          <Form.Control
+            type={'text'}
             value={title}
-            name={"title"}
+            name={'title'}
             onChange={({ target }) => setTitle(target.value)}
             placeholder="blog title"
             id="title"
           />
-        </div>
-        <div>
-          author
-          <input
-            type={"text"}
+          <Form.Label>Author:</Form.Label>
+          <Form.Control
+            type={'text'}
             value={author}
-            name={"author"}
+            name={'author'}
             onChange={({ target }) => setAuthor(target.value)}
             placeholder="blog author"
             id="author"
           />
-        </div>
-        <div>
-          url
-          <input
-            type={"text"}
+          <Form.Label>Url:</Form.Label>
+          <Form.Control
+            type={'text'}
             value={url}
-            name={"url"}
+            name={'url'}
             onChange={({ target }) => setUrl(target.value)}
             placeholder="blog url"
             id="url"
           />
-        </div>
-        <button type={"submit"} id="createButton">
-          create
-        </button>
-      </form>
+          <Button
+            variant="primary"
+            type="submit"
+            id="createButton"
+            className={'mt-4'}
+          >
+            create
+          </Button>
+        </Form.Group>
+      </Form>
     </div>
-  );
-};
+  )
+}

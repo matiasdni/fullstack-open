@@ -1,6 +1,7 @@
 import { useQuery } from 'react-query'
 import { Link, Route, Routes, useMatch } from 'react-router-dom'
 import userService from '../services/users'
+import { ListGroup, ListGroupItem, Table } from 'react-bootstrap'
 
 const User = ({ user }) => {
   if (!user) return null
@@ -8,11 +9,13 @@ const User = ({ user }) => {
     <div>
       <h2>{user.username}</h2>
       <h3>added blogs</h3>
-      <ul>
+      <ListGroup>
         {user.blogs.map((blog) => (
-          <li key={blog.id}>{blog.title}</li>
+          <ListGroupItem key={blog.id}>
+            {blog.title} by {blog.author}
+          </ListGroupItem>
         ))}
-      </ul>
+      </ListGroup>
     </div>
   )
 }
@@ -20,7 +23,7 @@ const User = ({ user }) => {
 const UserList = ({ users }) => {
   const sortedUsers = users.sort((a, b) => b.blogs.length - a.blogs.length)
   return (
-    <table>
+    <Table striped>
       <thead>
         <tr>
           <th>User</th>
@@ -37,7 +40,7 @@ const UserList = ({ users }) => {
           </tr>
         ))}
       </tbody>
-    </table>
+    </Table>
   )
 }
 

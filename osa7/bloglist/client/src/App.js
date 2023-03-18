@@ -12,14 +12,7 @@ import Togglable from './components/Togglable'
 import { CreateForm } from './components/CreateForm'
 import { Menu } from './components/Menu'
 import { BlogDetails } from './components/BlogDetails'
-
-const blogStyle = {
-  paddingTop: 10,
-  paddingLeft: 2,
-  border: 'solid',
-  borderWidth: 1,
-  marginBottom: 5,
-}
+import { Table } from 'react-bootstrap'
 
 const BlogList = ({ blogs, createFormRef, createMutation }) => {
   const createBlog = async (blog) => {
@@ -39,16 +32,22 @@ const BlogList = ({ blogs, createFormRef, createMutation }) => {
 
   return (
     <div>
+      <Table striped bordered responsive="md" hover>
+        <tbody>
+          {blogs.map((blog) => (
+            <tr key={blog.id}>
+              <td>
+                <Link to={`/blogs/${blog.id}`}>
+                  {blog.title} {blog.author}
+                </Link>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
       <Togglable buttonLabel="create new" ref={createFormRef}>
         <CreateForm handleSubmit={createBlog} />
       </Togglable>
-      {blogs.map((blog) => (
-        <div style={blogStyle} className="blog" key={blog.id}>
-          <Link to={`/blogs/${blog.id}`}>
-            {blog.title} {blog.author}
-          </Link>
-        </div>
-      ))}
     </div>
   )
 }
@@ -136,41 +135,44 @@ const App = () => {
   const match = useMatch('/blogs/:id')
   const blog = match ? blogById(match.params.id) : null
 
-  return userState.user === null ? (
-    <>
-      <Notification />
-
-      <LoginForm handleSubmit={handleLogin} />
-    </>
-  ) : (
-    <>
-      <h2>blogs</h2>
-      <Menu />
-      <Notification />
-      <Routes>
-        <Route path={'/users/*'} element={<Users />} />
-        <Route
-          path={'/blogs/:id'}
-          element={
-            <BlogDetails
-              blog={blog}
-              handleLikes={handleLikes}
-              handleComment={handleComment}
+  return (
+    <div className="container">
+      {userState.user === null ? (
+        <>
+          <Notification />
+          <LoginForm handleSubmit={handleLogin} />
+        </>
+      ) : (
+        <div className="container">
+          <h2>blogs</h2>
+          <Menu />
+          <Notification />
+          <Routes>
+            <Route path={'/users/*'} element={<Users />} />
+            <Route
+              path={'/blogs/:id'}
+              element={
+                <BlogDetails
+                  blog={blog}
+                  handleLikes={handleLikes}
+                  handleComment={handleComment}
+                />
+              }
             />
-          }
-        />
-        <Route
-          path={'/'}
-          element={
-            <BlogList
-              blogs={blogs}
-              createFormRef={createFormRef}
-              createMutation={createMutation}
+            <Route
+              path={'/'}
+              element={
+                <BlogList
+                  blogs={blogs}
+                  createFormRef={createFormRef}
+                  createMutation={createMutation}
+                />
+              }
             />
-          }
-        />
-      </Routes>
-    </>
+          </Routes>
+        </div>
+      )}
+    </div>
   )
 }
 

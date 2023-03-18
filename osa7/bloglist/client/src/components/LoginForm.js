@@ -1,49 +1,48 @@
-import { useState } from "react";
-import PropTypes from "prop-types";
+import { useState } from 'react'
+import PropTypes from 'prop-types'
+import { Button, Form } from 'react-bootstrap'
 
 export const LoginForm = ({ handleSubmit }) => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
 
   const login = (event) => {
-    event.preventDefault();
-    handleSubmit({ username, password });
-    setUsername("");
-    setPassword("");
-  };
+    event.preventDefault()
+    handleSubmit({ username, password })
+    setUsername('')
+    setPassword('')
+  }
 
   return (
     <div>
       <h2>Log in to application</h2>
-      <form onSubmit={login}>
-        <div>
-          username
-          <input
-            type={"text"}
-            value={username}
-            name={"Username"}
+      <Form onSubmit={login}>
+        <Form.Group>
+          <Form.Label>Username:</Form.Label>
+          <Form.Control
+            type="text"
+            name="username"
             onChange={({ target }) => setUsername(target.value)}
             id="username"
+            value={username}
           />
-        </div>
-        <div>
-          password
-          <input
-            type={"password"}
+          <Form.Label>Password:</Form.Label>
+          <Form.Control
+            type="password"
             value={password}
-            name={"Password"}
+            name={'Password'}
             onChange={({ target }) => setPassword(target.value)}
             id="password"
           />
-        </div>
-        <button type={"submit"} id="loginButton">
-          login
-        </button>
-      </form>
+          <Button variant="primary" type="submit" id="loginButton">
+            login
+          </Button>
+        </Form.Group>
+      </Form>
     </div>
-  );
-};
+  )
+}
 
 LoginForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
-};
+}

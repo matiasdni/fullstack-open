@@ -1,29 +1,23 @@
-import { useContext } from "react";
-import { NotificationContext } from "../context/NotificationContext";
+import { useContext } from 'react'
+import { NotificationContext } from '../context/NotificationContext'
+import { Alert } from 'react-bootstrap'
 
 export const Notification = () => {
-  const { state, dispatch } = useContext(NotificationContext);
+  const { state, dispatch } = useContext(NotificationContext)
   if (state.message === null) {
-    return null;
+    return null
   }
 
   setTimeout(() => {
-    dispatch({ type: "CLEAR_NOTIFICATION" });
-  }, 3000);
-
-  const style = {
-    color: state.style === "alert" ? "red" : "green",
-    background: "lightgrey",
-    fontSize: 20,
-    borderStyle: "solid",
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 10,
-  };
+    dispatch({ type: 'CLEAR_NOTIFICATION' })
+  }, 3000)
 
   return (
-    <div style={style} id="notification">
+    <Alert
+      variant={state.style !== 'alert' ? 'success' : 'danger'}
+      id="notification"
+    >
       {state.message}
-    </div>
-  );
-};
+    </Alert>
+  )
+}
