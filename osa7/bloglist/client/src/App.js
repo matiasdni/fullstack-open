@@ -1,28 +1,71 @@
 import { useContext, useEffect, useRef } from 'react'
-import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import { LoginForm } from './components/LoginForm'
-import { CreateForm } from './components/CreateForm'
-import Togglable from './components/Togglable'
 import { NotificationContext } from './context/NotificationContext'
 import { Notification } from './components/Notification'
-import { useQuery, useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { UserContext } from './context/UserContext'
+import { Users } from './components/Users'
+import { Link, Route, Routes, useMatch } from 'react-router-dom'
+import Togglable from './components/Togglable'
+import { CreateForm } from './components/CreateForm'
+import { Menu } from './components/Menu'
+import { BlogDetails } from './components/BlogDetails'
+
+const blogStyle = {
+  paddingTop: 10,
+  paddingLeft: 2,
+  border: 'solid',
+  borderWidth: 1,
+  marginBottom: 5,
+}
+
+const BlogList = ({ blogs, createFormRef, createMutation }) => {
+  const createBlog = async (blog) => {
+    try {
+      await createMutation.mutateAsync(blog, {
+        onSuccess: () => {
+          createFormRef.current.toggleVisibility()
+        },
+        onError: (error) => {
+          console.error(error)
+        },
+      })
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  return (
+    <div>
+      <Togglable buttonLabel="create new" ref={createFormRef}>
+        <CreateForm handleSubmit={createBlog} />
+      </Togglable>
+      {blogs.map((blog) => (
+        <div style={blogStyle} className="blog" key={blog.id}>
+          <Link to={`/blogs/${blog.id}`}>
+            {blog.title} {blog.author}
+          </Link>
+        </div>
+      ))}
+    </div>
+  )
+}
 
 const App = () => {
-  useEffect(() => {
-    const user = window.localStorage.getItem('loggedUser')
-    if (user) {
-      blogService.setToken(user.token)
-      userDispatch({ type: 'SET_USER', user })
-    }
-  }, [])
-  const { state: userState, dispatch: userDispatch } = useContext(UserContext)
   const createFormRef = useRef()
+  const { state: userState, dispatch: userDispatch } = useContext(UserContext)
   const { dispatch: notificationDispatch } = useContext(NotificationContext)
   const queryClient = useQueryClient()
   const { data: blogs = [] } = useQuery('blogs', blogService.getAll)
+  useEffect(async () => {
+    const user = window.localStorage.getItem('loggedUser')
+    if (user) {
+      blogService.setToken(user)
+      userDispatch({ type: 'SET_USER', user: JSON.parse(user) })
+    }
+  }, [])
 
   const updateMutation = useMutation(
     (updatedBlog) => blogService.update(updatedBlog),
@@ -33,11 +76,14 @@ const App = () => {
     }
   )
 
-  const removeMutation = useMutation((blog) => blogService.remove(blog), {
-    onSuccess: () => {
-      queryClient.invalidateQueries('blogs')
-    },
-  })
+  const commentMutation = useMutation(
+    (props) => blogService.addComment(props.id, props.comment),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('comments')
+      },
+    }
+  )
 
   const createMutation = useMutation((newBlog) => blogService.create(newBlog), {
     onSuccess: (data) => {
@@ -53,6 +99,14 @@ const App = () => {
   const handleLikes = async (updatedBlog) => {
     try {
       await updateMutation.mutateAsync(updatedBlog)
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  const handleComment = async (id, comment) => {
+    try {
+      await commentMutation.mutateAsync({ id, comment })
     } catch (e) {
       console.error(e)
     }
@@ -78,60 +132,44 @@ const App = () => {
     }
   }
 
-  const logOutHandler = () => {
-    window.localStorage.removeItem('loggedUser')
-    blogService.setToken(null)
-    userDispatch({ type: 'CLEAR_USER' })
-    notify('logout successful')
-  }
-
-  const createBlog = async (newBlog) => {
-    try {
-      await createMutation.mutateAsync(newBlog)
-    } catch (e) {
-      console.error(e)
-    }
-  }
-
-  const removeBlog = async (blog) => {
-    try {
-      await removeMutation.mutateAsync(blog)
-      notify(`${blog.title} by ${blog.author} removed`)
-    } catch (e) {
-      console.error(e)
-      notify('error removing blog', 'alert')
-    }
-  }
+  const blogById = (id) => blogs.find((a) => a.id === id)
+  const match = useMatch('/blogs/:id')
+  const blog = match ? blogById(match.params.id) : null
 
   return userState.user === null ? (
     <>
       <Notification />
+
       <LoginForm handleSubmit={handleLogin} />
     </>
   ) : (
     <>
       <h2>blogs</h2>
+      <Menu />
       <Notification />
-      <p>
-        {userState.name} logged in{' '}
-        <button onClick={logOutHandler}>logout</button>
-      </p>
-      <Togglable buttonLabel="create new blog" ref={createFormRef}>
-        <CreateForm handleSubmit={createBlog} />
-      </Togglable>
-      <div>
-        {blogs
-          .sort((a, b) => b.likes - a.likes)
-          .map((blog) => (
-            <Blog
-              key={blog.id}
+      <Routes>
+        <Route path={'/users/*'} element={<Users />} />
+        <Route
+          path={'/blogs/:id'}
+          element={
+            <BlogDetails
               blog={blog}
               handleLikes={handleLikes}
-              user={Object(userState.user)}
-              deleteBlog={removeBlog}
+              handleComment={handleComment}
             />
-          ))}
-      </div>
+          }
+        />
+        <Route
+          path={'/'}
+          element={
+            <BlogList
+              blogs={blogs}
+              createFormRef={createFormRef}
+              createMutation={createMutation}
+            />
+          }
+        />
+      </Routes>
     </>
   )
 }

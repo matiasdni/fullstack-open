@@ -12,6 +12,26 @@ router.get("/", async (request, response) => {
   response.json(notes);
 });
 
+router.get("/:id/comments", async (request, response) => {
+  const blog = await Blog.findById(request.params.id);
+  response.status(200).json(blog.comments);
+});
+
+router.post("/:id/comments", async (request, response) => {
+  const { id, comment } = request.body;
+
+  // add comment to blog
+  const blog = await Blog.findById(id);
+  blog.comments = blog.comments.concat(comment);
+  await blog.save();
+  response.status(201).json(blog);
+});
+
+router.get("/:id", async (request, response) => {
+  const blog = await Blog.findById(request.params.id);
+  response.status(200).json(blog);
+});
+
 router.post("/", async (request, response) => {
   if (!request.user) {
     return response.status(401).json({ error: "token missing or invalid" });

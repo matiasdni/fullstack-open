@@ -1,28 +1,28 @@
-import { useState } from 'react'
+import { useState } from "react";
 
 export const CreateForm = ({ handleSubmit }) => {
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
+  const [title, setTitle] = useState("");
+  const [author, setAuthor] = useState("");
+  const [url, setUrl] = useState("");
 
   const addBlog = (event) => {
-    event.preventDefault()
-    handleSubmit({ title: title, author: author, url: url })
-    setTitle('')
-    setAuthor('')
-    setUrl('')
-  }
+    event.preventDefault();
+    handleSubmit({ title: title, author: author, url: url });
+    setTitle("");
+    setAuthor("");
+    setUrl("");
+  };
 
   return (
-    <div className={'createDiv'}>
+    <div className={"createDiv"}>
       <h2>create new</h2>
       <form onSubmit={addBlog}>
         <div>
           title
           <input
-            type={'text'}
+            type={"text"}
             value={title}
-            name={'title'}
+            name={"title"}
             onChange={({ target }) => setTitle(target.value)}
             placeholder="blog title"
             id="title"
@@ -31,9 +31,9 @@ export const CreateForm = ({ handleSubmit }) => {
         <div>
           author
           <input
-            type={'text'}
+            type={"text"}
             value={author}
-            name={'author'}
+            name={"author"}
             onChange={({ target }) => setAuthor(target.value)}
             placeholder="blog author"
             id="author"
@@ -42,18 +42,18 @@ export const CreateForm = ({ handleSubmit }) => {
         <div>
           url
           <input
-            type={'text'}
+            type={"text"}
             value={url}
-            name={'url'}
+            name={"url"}
             onChange={({ target }) => setUrl(target.value)}
             placeholder="blog url"
             id="url"
           />
         </div>
-        <button type={'submit'} id="createButton">
+        <button type={"submit"} id="createButton">
           create
         </button>
       </form>
     </div>
-  )
-}
+  );
+};
